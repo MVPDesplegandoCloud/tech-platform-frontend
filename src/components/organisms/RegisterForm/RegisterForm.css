@@ -1,0 +1,33 @@
+.organism-register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.organism-register-form__error {
+  margin-bottom: 16px;
+}
+
+.organism-register-form__submit {
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.organism-register-form__footer {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.organism-register-form__link {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.organism-register-form__link:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
