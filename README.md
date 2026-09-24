@@ -2,9 +2,11 @@
 
 Aplicación React moderna para la plataforma de gestión de contenido tecnológico con autenticación integrada.
 
+**Independiente de proveedor**: Funciona con cualquier backend de autenticación REST.
+
 ## 📋 Requisitos
 
-- Node.js 14+ y npm
+- Node.js 16+ y npm
 
 ## 🚀 Inicio Rápido
 
@@ -22,7 +24,8 @@ Copia `.env.example` a `.env.local`:
 cp .env.example .env.local
 ```
 
-Configura las variables según tu infraestructura de autenticación.
+Variables disponibles:
+- `REACT_APP_API_URL` - URL base del backend (default: `http://localhost:3001`)
 
 ### 3. Ejecutar en Desarrollo
 
@@ -44,10 +47,8 @@ npm run build
 src/
 ├── components/
 │   └── ProtectedRoute.js      # Componente para proteger rutas
-├── config/
-│   └── amplify.js             # Configuración de AWS Amplify
 ├── context/
-│   └── AuthContext.js         # Context de autenticación
+│   └── AuthContext.js         # Context de autenticación (REST API)
 ├── pages/
 │   ├── Auth.css               # Estilos de autenticación
 │   ├── ConfirmSignUp.js       # Página de confirmación de email
@@ -78,13 +79,20 @@ src/
 ### ✅ Dashboard
 
 - Página de bienvenida para usuarios autenticados
-- Muestra información del usuario (username, userId)
+- Muestra información del usuario
 - Botón de logout
-- Estructura lista para agregar funcionalidades futuras:
-  - Gestión de intereses
-  - Seguimiento de fuentes
-  - Feed personalizado
-  - Perfil de usuario
+- Estructura lista para agregar funcionalidades futuras
+
+## 🔗 Endpoints Requeridos en Backend
+
+El frontend espera estos endpoints REST:
+
+| Método | Endpoint | Payload | Response |
+|--------|----------|---------|----------|
+| POST | `/api/auth/register` | `{ email, password }` | `{ success: bool, message: string }` |
+| POST | `/api/auth/login` | `{ email, password }` | `{ isSignedIn: bool, user: {...} }` |
+| POST | `/api/auth/logout` | - | `{ success: bool }` |
+| POST | `/api/auth/confirm` | `{ email, code }` | `{ success: bool }` |
 
 ## 📝 Flujos de Usuario
 
@@ -92,24 +100,25 @@ src/
 
 1. Usuario accede a `/register`
 2. Completa formulario con email y contraseña
-3. Se valida la contraseña (8+ caracteres, mayúscula, número, carácter especial)
-4. Se envía código de confirmación al email
-5. Usuario ingresa código en `/confirm-signup`
-6. Redirigido a `/login` para iniciar sesión
+3. Se valida el formato de email y contraseña
+4. Se envía solicitud a `POST /api/auth/register`
+5. Usuario ingresa código de confirmación en `/confirm-signup`
+6. Se envía a `POST /api/auth/confirm`
+7. Redirigido a `/login` para iniciar sesión
 
 ### Usuario Existente (Login)
 
 1. Usuario accede a `/login`
 2. Ingresa email y contraseña
-3. Amazon Cognito verifica credenciales
-4. Si es correcto, se genera JWT token
+3. Se envía solicitud a `POST /api/auth/login`
+4. Si es correcto, se guarda la sesión del usuario
 5. Redirigido a `/dashboard`
 
 ### Usuario Autenticado
 
 1. Puede acceder a todas las rutas protegidas
 2. Su información está disponible en el contexto de autenticación
-3. El `userId` se puede usar para llamadas a APIs backend
+3. Los datos del usuario pueden usarse para llamadas a APIs backend
 
 ## 🛠️ Desarrollo
 
@@ -131,72 +140,59 @@ npm run build
 npm test
 ```
 
-## 🌐 Despliegue en AWS Amplify
+## 🌐 Despliegue
 
-### 1. Conectar repositorio GitHub
-
-```bash
-amplify init
-```
-
-Sigue las instrucciones para conectar tu repositorio.
-
-### 2. Agregar hosting
+### Opción 1: Vercel (Recomendado)
 
 ```bash
-amplify add hosting
+npm install -g vercel
+vercel
 ```
 
-Elige:
-- Hosting with Amplify Console
-- Manual deployment o Git-based deployment
-
-### 3. Publicar
+### Opción 2: Netlify
 
 ```bash
-amplify publish
+npm install -g netlify-cli
+netlify deploy --prod --dir=build
 ```
 
-Esto construirá y desplegará la aplicación en AWS Amplify.
+### Opción 3: Docker
 
-## 🔑 Configuración de Cognito Recomendada
-
-### Políticas de Contraseña
-
-- Mínimo 8 caracteres
-- Requiere mayúsculas
-- Requiere números
-- Requiere símbolos especiales
-
-### Atributos de Usuario
-
-- Email (requerido)
-- Verificación de email automática
-
-### Flujo de Autenticación
-
-- USER_PASSWORD_AUTH (para login)
-- ALLOW_USER_PASSWORD_AUTH (para apps)
+```dockerfile
+FROM node:16-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+EXPOSE 3000
+CMD ["npm", "start"]
+```
 
 ## 🐛 Solución de Problemas
 
-### Error: "Amplify is not configured"
+### Error: "Cannot find module"
 
-Asegúrate de que tu `.env.local` tiene los valores correctos de Cognito.
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
 
-### Error: "User not found"
+### Puerto 3000 en uso
 
-Verifica que el usuario está confirmado en Cognito.
+```bash
+PORT=3001 npm start
+```
 
-### Error: "Invalid client id"
+### CORS errors
 
-Confirma que el `REACT_APP_COGNITO_CLIENT_ID` es correcto.
+Verifica que tu backend tenga CORS habilitado para el origen del frontend.
 
 ## 📚 Recursos Adicionales
 
-- [AWS Amplify Documentation](https://docs.amplify.aws/)
-- [Amazon Cognito Documentation](https://docs.aws.amazon.com/cognito/)
 - [React Router Documentation](https://reactrouter.com/)
+- [React Hooks Guide](https://react.dev/reference/react)
+- [Context API Documentation](https://react.dev/reference/react/useContext)
 
 ## 🤝 Próximos Pasos
 
