@@ -1,70 +1,212 @@
-# Getting Started with Create React App
+# Tech Platform - Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicación React moderna para la plataforma de gestión de contenido tecnológico con autenticación integrada.
 
-## Available Scripts
+## 📋 Requisitos
 
-In the project directory, you can run:
+- Node.js 14+ y npm
 
-### `npm start`
+## 🚀 Inicio Rápido
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 1. Instalación
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+npm install
+```
 
-### `npm test`
+### 2. Configurar Variables de Entorno
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Copia `.env.example` a `.env.local`:
 
-### `npm run build`
+```bash
+cp .env.example .env.local
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Configura las variables según tu infraestructura de autenticación.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### 3. Ejecutar en Desarrollo
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm start
+```
 
-### `npm run eject`
+La aplicación abrirá en `http://localhost:3000`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### 4. Build para Producción
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🏗️ Estructura del Proyecto
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+├── components/
+│   └── ProtectedRoute.js      # Componente para proteger rutas
+├── config/
+│   └── amplify.js             # Configuración de AWS Amplify
+├── context/
+│   └── AuthContext.js         # Context de autenticación
+├── pages/
+│   ├── Auth.css               # Estilos de autenticación
+│   ├── ConfirmSignUp.js       # Página de confirmación de email
+│   ├── Dashboard.css          # Estilos del dashboard
+│   ├── Dashboard.js           # Página principal (protegida)
+│   ├── Login.js               # Página de login
+│   └── Register.js            # Página de registro
+├── App.js                     # Router principal
+└── App.css                    # Estilos globales
+```
 
-## Learn More
+## 🔐 Funcionalidades Implementadas
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### ✅ Autenticación
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Login**: Inicio de sesión con email y contraseña
+- **Registro**: Creación de nuevas cuentas de usuario
+- **Confirmación de Email**: Flujo de verificación de correo
+- **Logout**: Cierre de sesión seguro
 
-### Code Splitting
+### ✅ Gestión de Sesión
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Protección de rutas que requieren autenticación
+- Redirección automática a login si no está autenticado
+- Redirección automática a dashboard si ya está autenticado
+- Mantenimiento de sesión al recargar
 
-### Analyzing the Bundle Size
+### ✅ Dashboard
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- Página de bienvenida para usuarios autenticados
+- Muestra información del usuario (username, userId)
+- Botón de logout
+- Estructura lista para agregar funcionalidades futuras:
+  - Gestión de intereses
+  - Seguimiento de fuentes
+  - Feed personalizado
+  - Perfil de usuario
 
-### Making a Progressive Web App
+## 📝 Flujos de Usuario
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Nuevo Usuario (Registro)
 
-### Advanced Configuration
+1. Usuario accede a `/register`
+2. Completa formulario con email y contraseña
+3. Se valida la contraseña (8+ caracteres, mayúscula, número, carácter especial)
+4. Se envía código de confirmación al email
+5. Usuario ingresa código en `/confirm-signup`
+6. Redirigido a `/login` para iniciar sesión
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Usuario Existente (Login)
 
-### Deployment
+1. Usuario accede a `/login`
+2. Ingresa email y contraseña
+3. Amazon Cognito verifica credenciales
+4. Si es correcto, se genera JWT token
+5. Redirigido a `/dashboard`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Usuario Autenticado
 
-### `npm run build` fails to minify
+1. Puede acceder a todas las rutas protegidas
+2. Su información está disponible en el contexto de autenticación
+3. El `userId` se puede usar para llamadas a APIs backend
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🛠️ Desarrollo
+
+### Ejecutar en modo desarrollo
+
+```bash
+npm start
+```
+
+### Build para producción
+
+```bash
+npm run build
+```
+
+### Ejecutar pruebas
+
+```bash
+npm test
+```
+
+## 🌐 Despliegue en AWS Amplify
+
+### 1. Conectar repositorio GitHub
+
+```bash
+amplify init
+```
+
+Sigue las instrucciones para conectar tu repositorio.
+
+### 2. Agregar hosting
+
+```bash
+amplify add hosting
+```
+
+Elige:
+- Hosting with Amplify Console
+- Manual deployment o Git-based deployment
+
+### 3. Publicar
+
+```bash
+amplify publish
+```
+
+Esto construirá y desplegará la aplicación en AWS Amplify.
+
+## 🔑 Configuración de Cognito Recomendada
+
+### Políticas de Contraseña
+
+- Mínimo 8 caracteres
+- Requiere mayúsculas
+- Requiere números
+- Requiere símbolos especiales
+
+### Atributos de Usuario
+
+- Email (requerido)
+- Verificación de email automática
+
+### Flujo de Autenticación
+
+- USER_PASSWORD_AUTH (para login)
+- ALLOW_USER_PASSWORD_AUTH (para apps)
+
+## 🐛 Solución de Problemas
+
+### Error: "Amplify is not configured"
+
+Asegúrate de que tu `.env.local` tiene los valores correctos de Cognito.
+
+### Error: "User not found"
+
+Verifica que el usuario está confirmado en Cognito.
+
+### Error: "Invalid client id"
+
+Confirma que el `REACT_APP_COGNITO_CLIENT_ID` es correcto.
+
+## 📚 Recursos Adicionales
+
+- [AWS Amplify Documentation](https://docs.amplify.aws/)
+- [Amazon Cognito Documentation](https://docs.aws.amazon.com/cognito/)
+- [React Router Documentation](https://reactrouter.com/)
+
+## 🤝 Próximos Pasos
+
+Esta es la puerta de entrada a toda la plataforma. Una vez completada esta historia, se pueden desarrollar:
+
+1. **User Preferences** - Gestión de intereses tecnológicos
+2. **Source Management** - Seguimiento de fuentes de contenido
+3. **Feed Service** - Feed personalizado basado en preferencias
+4. **Recommendation Engine** - Recomendaciones de contenido
+
+## 📄 Licencia
+
+Proyecto privado para la plataforma de gestión de contenido tecnológico.

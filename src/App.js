@@ -1,24 +1,66 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import ConfirmSignUp from './pages/ConfirmSignUp';
+import Dashboard from './pages/Dashboard';
+import './config/amplify';
 import './App.css';
+
+function AppRoutes() {
+  const { isAuthenticated, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <p>Cargando...</p>
+      </div>
+    );
+  }
+
+  return (
+    <Routes>
+      <Route 
+        path="/login" 
+        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />} 
+      />
+      <Route 
+        path="/register" 
+        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />} 
+      />
+      <Route 
+        path="/confirm-signup" 
+        element={<ConfirmSignUp />} 
+      />
+      <Route 
+        path="/dashboard" 
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/" 
+        element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} 
+      />
+      <Route 
+        path="*" 
+        element={<Navigate to={isAuthenticated ? '/dashboard' : '/login'} replace />} 
+      />
+    </Routes>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
+    </Router>
   );
 }
 
