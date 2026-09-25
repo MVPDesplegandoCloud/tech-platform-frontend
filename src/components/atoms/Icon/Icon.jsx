@@ -36,6 +36,25 @@ const Icon = ({ name, size = 'md', className = '', ariaLabel, ...rest }) => {
         <line x1="12" y1="16" x2="12.01" y2="16" />
       </svg>
     ),
+    star: (
+      <svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="0">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+      </svg>
+    ),
+    trash: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <polyline points="3 6 5 6 21 6" />
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+        <line x1="10" y1="11" x2="10" y2="17" />
+        <line x1="14" y1="11" x2="14" y2="17" />
+      </svg>
+    ),
+    edit: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+      </svg>
+    ),
   };
 
   return (
@@ -46,7 +65,7 @@ const Icon = ({ name, size = 'md', className = '', ariaLabel, ...rest }) => {
 };
 
 Icon.propTypes = {
-  name: PropTypes.oneOf(['eye', 'eyeOff', 'check', 'error']),
+  name: PropTypes.oneOf(['eye', 'eyeOff', 'check', 'error', 'star', 'trash', 'edit']),
   size: PropTypes.oneOf(['sm', 'md', 'lg']),
   className: PropTypes.string,
   ariaLabel: PropTypes.string,

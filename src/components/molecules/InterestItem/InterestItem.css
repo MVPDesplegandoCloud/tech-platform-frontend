@@ -1,0 +1,78 @@
+.molecule-interest-item {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s;
+}
+
+.molecule-interest-item:hover {
+  background-color: #f9fafb;
+}
+
+.molecule-interest-item__name {
+  font-weight: 500;
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+.molecule-interest-item__rating {
+  display: flex;
+  justify-content: center;
+}
+
+.molecule-interest-item__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.molecule-interest-item__button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.molecule-interest-item__button:hover {
+  background-color: #f0f0f5;
+  color: #333;
+}
+
+.molecule-interest-item__button--delete:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.molecule-interest-item__button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+@media (max-width: 768px) {
+  .molecule-interest-item {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .molecule-interest-item__name {
+    order: 1;
+  }
+
+  .molecule-interest-item__rating {
+    order: 2;
+    justify-content: flex-start;
+  }
+
+  .molecule-interest-item__actions {
+    order: 3;
+    justify-content: flex-start;
+  }
+}
