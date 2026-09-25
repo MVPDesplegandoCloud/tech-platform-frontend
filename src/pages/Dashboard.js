@@ -38,7 +38,9 @@ const Dashboard = () => {
           <div className="feature-card">
             <h3>Gestionar Intereses</h3>
             <p>Configura tus intereses tecnológicos para personalizar tu experiencia.</p>
-            <button disabled className="feature-button">Próximamente</button>
+            <button onClick={() => navigate('/interests')} className="feature-button">
+              Ir a Intereses
+            </button>
           </div>
 
           <div className="feature-card">

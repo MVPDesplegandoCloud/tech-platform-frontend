@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmSignUp from './pages/ConfirmSignUp';
 import Dashboard from './pages/Dashboard';
+import UserInterests from './pages/UserInterests';
 import './config/amplify';
 import './App.css';
 
@@ -41,6 +42,10 @@ function AppRoutes() {
             <Dashboard />
           </ProtectedRoute>
         } 
+      />
+      <Route 
+        path="/interests" 
+        element={<UserInterests />}
       />
       <Route 
         path="/" 

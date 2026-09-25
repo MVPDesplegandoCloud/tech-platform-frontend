@@ -1,0 +1,44 @@
+.atom-star-rating {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.atom-star-rating__star {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #d1d5db;
+  transition: color 0.2s;
+  border-radius: 2px;
+}
+
+.atom-star-rating__star:hover:not(:disabled) {
+  color: #fbbf24;
+}
+
+.atom-star-rating__star--filled {
+  color: #fbbf24;
+}
+
+.atom-star-rating__star:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.atom-star-rating--sm .atom-star-rating__star {
+  padding: 2px;
+}
+
+.atom-star-rating--lg .atom-star-rating__star {
+  padding: 6px;
+}
+
+.atom-star-rating__star:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
