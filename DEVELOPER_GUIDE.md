@@ -2,6 +2,42 @@
 
 Guía completa para desarrolladores que trabajen en el frontend de Tech Platform.
 
+## 🔐 Autenticación con AWS Cognito
+
+Este proyecto utiliza **AWS Cognito** para autenticación de usuarios.
+
+### ¿Qué es Cognito?
+
+Amazon Cognito es un servicio de AWS que proporciona:
+- Registro e inicio de sesión de usuarios
+- Verificación de email
+- Gestión de tokens JWT
+- Integración segura con APIs backend
+
+### Arquitectura de Autenticación
+
+```
+Frontend (React)
+    ↓ (email/password)
+AWS Cognito (User Pool)
+    ↓ (JWT token)
+Backend API (API Gateway + Lambda)
+    ↓ (valida JWT)
+DynamoDB / Recursos
+```
+
+### Flujo de Login
+
+1. Usuario ingresa email/password en `/login`
+2. Frontend llama a Cognito con las credenciales
+3. Cognito valida y devuelve JWT token
+4. Token se guarda en el navegador (sessionStorage/localStorage)
+5. Cada request al backend incluye el token
+6. API Gateway valida el token con Cognito
+7. Si es válido, se procesa la request
+
+---
+
 ## 🎯 Estructura del Proyecto
 
 ```
@@ -47,20 +83,44 @@ cd tech-platform-frontend
 npm install
 ```
 
-### 3. Configurar Variables de Entorno
+### 3. Configurar Variables de Entorno (Cognito)
+
+Las variables de entorno conectan tu frontend a AWS Cognito para autenticación.
+
+**Paso 1: Crear archivo `.env.local`**
 
 ```bash
 cp .env.example .env.local
 ```
 
-Edita `.env.local` con tus valores de Cognito:
+**Paso 2: Completar con tus valores de Cognito**
 
-```
+Edita `.env.local` y reemplaza los placeholders con tus valores reales:
+
+```env
 REACT_APP_AWS_REGION=us-east-1
+
+# Obtén estos valores después de desplegar AuthStack en la infra
+# cd ../infra && cdk deploy AuthStack
 REACT_APP_COGNITO_USER_POOL_ID=us-east-1_xxxxx
 REACT_APP_COGNITO_CLIENT_ID=xxxxx
 REACT_APP_IDENTITY_POOL_ID=us-east-1:xxxxx
 ```
+
+**¿Dónde obtener estos valores?**
+
+1. Ve a AWS Console → **Cognito** → **User Pools**
+2. Haz clic en tu pool (ej: "UserPool")
+3. Copia los valores:
+   - **User Pool ID**: En "General settings"
+   - **App Client ID**: En "App integration" → "App client settings"
+   - **Identity Pool ID**: En AWS Console → **Cognito** → **Identity Pools**
+
+**⚠️ Importante:**
+- `.env.local` NO debe ser commiteado (está en `.gitignore`)
+- Es específico de tu máquina local
+- Cada developer debe crear el suyo con sus propios valores
+- En producción, las variables se configuran en Amplify Console
 
 ### 4. Iniciar Servidor de Desarrollo
 
@@ -318,10 +378,12 @@ try {
 
 | Error | Causa | Solución |
 |-------|-------|----------|
-| `UserNotConfirmedException` | Usuario no confirmó email | Enviar código de confirmación |
-| `NotAuthorizedException` | Credenciales incorrectas | Verificar email/contraseña |
-| `UsernameExistsException` | Email ya registrado | Sugerir login o recuperar contraseña |
-| `InvalidPasswordException` | Contraseña no cumple requisitos | Mostrar requisitos |
+| `UserNotConfirmedException` | Usuario no confirmó email | Enviar código de confirmación en `/confirm-signup` |
+| `NotAuthorizedException` | Credenciales incorrectas | Verificar email y contraseña |
+| `UsernameExistsException` | Email ya registrado | Ir a login o usar otro email |
+| `InvalidPasswordException` | Contraseña no cumple requisitos | Usar al menos: 8 caracteres, mayúscula, número, símbolo |
+| `InvalidClientTokenId` | Credenciales de AWS inválidas | Revisar `.env.local` con valores correctos |
+| `ResourceNotFoundException` | User Pool no existe | Verificar que el User Pool fue deployado en AWS |
 
 ## 🚀 Próximas Características
 
