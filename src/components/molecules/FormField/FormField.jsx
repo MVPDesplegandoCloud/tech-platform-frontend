@@ -44,6 +44,7 @@ const FormField = forwardRef(
         <Input
           ref={ref}
           id={id}
+          name={id}
           type={type}
           placeholder={placeholder}
           value={value}

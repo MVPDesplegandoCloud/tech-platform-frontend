@@ -51,6 +51,7 @@ const PasswordField = forwardRef(
           <Input
             ref={ref}
             id={id}
+            name={id}
             type={showPassword ? 'text' : 'password'}
             placeholder={placeholder}
             value={value}
