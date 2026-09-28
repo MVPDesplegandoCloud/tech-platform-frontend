@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     checkUser();
   }, []);
 
-  const register = useCallback(async (email, password) => {
+  const register = useCallback(async (email, password, fullName = '') => {
     try {
       setError(null);
       const result = await signUp({
@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
         options: {
           userAttributes: {
             email,
+            name: fullName,
           },
           autoSignIn: false,
         },

@@ -12,20 +12,26 @@ import './TechInterestsForm.css';
 const TechInterestsForm = ({ 
   initialInterests = [],
   onSave,
+  onAdd,
   isLoading = false,
 }) => {
   const [interests, setInterests] = useState(initialInterests);
 
+  // Sincronizar cuando initialInterests cambie (ej: carga desde API/mock)
+  React.useEffect(() => {
+    setInterests(initialInterests);
+  }, [initialInterests]);
+
   /**
    * Add new interest
    */
-  const handleAddInterest = useCallback((newInterest) => {
-    const interest = {
-      id: Date.now().toString(),
-      ...newInterest,
-    };
-    setInterests((prev) => [...prev, interest]);
-  }, []);
+  const handleAddInterest = useCallback(async (newInterest) => {
+    try {
+      await onAdd(newInterest);
+    } catch (error) {
+      console.error('Error adding interest:', error);
+    }
+  }, [onAdd]);
 
   /**
    * Update interest level
@@ -48,8 +54,7 @@ const TechInterestsForm = ({
   /**
    * Handle form submission
    */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       await onSave(interests);
     } catch (error) {
@@ -58,12 +63,12 @@ const TechInterestsForm = ({
   };
 
   return (
-    <form className="organism-tech-interests-form" onSubmit={handleSubmit}>
+    <div className="organism-tech-interests-form">
       <div className="organism-tech-interests-form__section">
         <h3 className="organism-tech-interests-form__subtitle">
           Añadir Nuevo Interés
         </h3>
-        <AddInterestForm onAddInterest={handleAddInterest} />
+        <AddInterestForm onAddInterest={handleAddInterest} isLoading={isLoading} />
       </div>
 
       {interests.length > 0 && (
@@ -95,16 +100,17 @@ const TechInterestsForm = ({
 
       <div className="organism-tech-interests-form__actions">
         <Button
-          type="submit"
+          type="button"
           variant="primary"
           size="lg"
           isLoading={isLoading}
           disabled={isLoading || interests.length === 0}
+          onClick={handleSubmit}
         >
           Guardar Cambios
         </Button>
       </div>
-    </form>
+    </div>
   );
 };
 
@@ -117,6 +123,7 @@ TechInterestsForm.propTypes = {
     })
   ),
   onSave: PropTypes.func.isRequired,
+  onAdd: PropTypes.func.isRequired,
   isLoading: PropTypes.bool,
 };
 
