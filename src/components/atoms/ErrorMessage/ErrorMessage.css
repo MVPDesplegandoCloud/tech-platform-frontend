@@ -1,0 +1,21 @@
+.atom-error-message {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  color: #991b1b;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.atom-error-message__text {
+  flex: 1;
+}
+
+.atom-error-message svg {
+  color: #dc2626;
+  flex-shrink: 0;
+}

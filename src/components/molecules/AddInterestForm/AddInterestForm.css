@@ -1,0 +1,45 @@
+.molecule-add-interest-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+}
+
+.molecule-add-interest-form__inputs {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 16px;
+  align-items: end;
+}
+
+.molecule-add-interest-form__rating {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.molecule-add-interest-form__label {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 14px;
+}
+
+@media (max-width: 1024px) {
+  .molecule-add-interest-form__inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .molecule-add-interest-form {
+    padding: 16px;
+    gap: 16px;
+  }
+
+  .molecule-add-interest-form__inputs {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}

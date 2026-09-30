@@ -1,0 +1,39 @@
+.page-user-interests {
+  min-height: 100vh;
+}
+
+.page-user-interests__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-user-interests__footer {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-user-interests__back-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: color 0.2s;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+
+.page-user-interests__back-link:hover {
+  color: #1d4ed8;
+  background-color: #f0f0f5;
+}
+
+.page-user-interests__back-link:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}

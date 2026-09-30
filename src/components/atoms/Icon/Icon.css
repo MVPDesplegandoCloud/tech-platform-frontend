@@ -1,0 +1,27 @@
+.atom-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.atom-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.atom-icon--sm {
+  width: 20px;
+  height: 20px;
+}
+
+.atom-icon--md {
+  width: 24px;
+  height: 24px;
+}
+
+.atom-icon--lg {
+  width: 32px;
+  height: 32px;
+}

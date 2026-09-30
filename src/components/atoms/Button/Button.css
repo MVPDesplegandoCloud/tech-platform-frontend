@@ -1,0 +1,99 @@
+.atom-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  outline: none;
+}
+
+/* Sizes */
+.atom-button--sm {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+.atom-button--md {
+  padding: 12px 16px;
+  font-size: 16px;
+}
+
+.atom-button--lg {
+  padding: 14px 24px;
+  font-size: 16px;
+  width: 100%;
+}
+
+/* Variants */
+.atom-button--primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.atom-button--primary:hover:not(:disabled) {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.atom-button--primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.atom-button--secondary {
+  background-color: white;
+  color: #666;
+  border: 1px solid #d1d5db;
+}
+
+.atom-button--secondary:hover:not(:disabled) {
+  border-color: #9ca3af;
+  color: #374151;
+  background-color: #f9fafb;
+}
+
+.atom-button--danger {
+  background-color: #dc2626;
+  color: white;
+}
+
+.atom-button--danger:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+/* States */
+.atom-button--disabled,
+.atom-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.atom-button--loading {
+  opacity: 0.8;
+}
+
+.atom-button__spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Focus */
+.atom-button:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+}
