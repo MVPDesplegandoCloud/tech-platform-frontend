@@ -142,21 +142,31 @@ npm test
 
 ## 🌐 Despliegue
 
-### Opción 1: Vercel (Recomendado)
+### Opción 1: AWS Amplify (Recomendado)
+
+Configura el hosting desde AWS Amplify Console:
+
+1. Ve a [AWS Amplify Console](https://console.aws.amazon.com/amplify)
+2. Haz clic en "New app" → "Host web app"
+3. Selecciona GitHub y este repositorio
+4. Configura variables de entorno (en Amplify Console)
+5. Deploy automático en cada push a `main`
+
+### Opción 2: Vercel
 
 ```bash
 npm install -g vercel
 vercel
 ```
 
-### Opción 2: Netlify
+### Opción 3: Netlify
 
 ```bash
 npm install -g netlify-cli
 netlify deploy --prod --dir=build
 ```
 
-### Opción 3: Docker
+### Opción 4: Docker
 
 ```dockerfile
 FROM node:16-alpine
