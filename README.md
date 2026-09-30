@@ -240,6 +240,16 @@ Amplify Hosting se conecta automáticamente a GitHub:
 4. Configura variables de entorno (en Amplify Console)
 5. Deploy automático en cada push a `main`
 
+### Opción 1: AWS Amplify (Recomendado)
+
+Configura el hosting desde AWS Amplify Console:
+
+1. Ve a [AWS Amplify Console](https://console.aws.amazon.com/amplify)
+2. Haz clic en "New app" → "Host web app"
+3. Selecciona GitHub y este repositorio
+4. Configura variables de entorno (en Amplify Console)
+5. Deploy automático en cada push a `main`
+
 ### Opción 2: Vercel
 
 ```bash
