@@ -1,0 +1,352 @@
+.sources-page {
+  min-height: 100vh;
+  padding: 88px clamp(20px, 4vw, 64px) 56px;
+  color: #202638;
+  background: #f3f4f8;
+}
+
+.sources-toolbar {
+  position: fixed;
+  z-index: 5;
+  inset: 0 0 auto;
+  min-height: 72px;
+  padding: 12px clamp(20px, 4vw, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #e7e8ef;
+  backdrop-filter: blur(12px);
+}
+
+.sources-toolbar__back {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  border: 0;
+  padding: 8px 0;
+  color: #283044;
+  background: transparent;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sources-toolbar__back span {
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.sources-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  width: min(1040px, 100%);
+  margin: 0 auto;
+}
+
+.sources-panel.molecule-card {
+  max-width: none;
+  margin: 0;
+  padding: 30px;
+  border: 1px solid #eceef3;
+  border-radius: 20px;
+  background: #fff;
+}
+
+.sources-panel > .molecule-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sources-list-panel__heading h2 {
+  margin: 0;
+  color: #202638;
+  font-size: 24px;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+
+.sources-list-panel__heading > div > p:last-child {
+  margin: 7px 0 0;
+  color: #687185;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.sources-eyebrow {
+  margin: 0 0 7px;
+  color: #6a70e8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.sources-filters .atom-label {
+  margin-bottom: 7px;
+  color: #273044;
+  font-size: 14px;
+}
+
+.sources-filters .atom-input,
+.sources-select,
+.sources-search .atom-input {
+  min-height: 48px;
+  padding: 12px 15px;
+  border: 1px solid #d8dce6;
+  border-radius: 12px;
+  color: #283044;
+  background: #fff;
+  font: inherit;
+  font-size: 15px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.sources-filters .atom-input:focus,
+.sources-select:focus {
+  border-color: #7378ea;
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(105, 111, 227, 0.12);
+}
+
+.sources-filters .atom-input::placeholder,
+.sources-search .atom-input::placeholder {
+  color: #9aa2b3;
+}
+
+.sources-select {
+  width: 100%;
+  appearance: auto;
+  cursor: pointer;
+}
+
+.sources-tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sources-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: 999px;
+  color: #5665cb;
+  background: #eef0ff;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.sources-list-panel {
+  min-width: 0;
+  padding: 0;
+}
+
+.sources-list-panel__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.sources-filters {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(170px, 0.48fr);
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.sources-search,
+.sources-type-filter {
+  min-width: 0;
+}
+
+.sources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sources-resource-card.molecule-card {
+  max-width: none;
+  margin: 0;
+  padding: 22px 24px;
+  border: 1px solid #e5e8ef;
+  border-radius: 16px;
+  box-shadow: 0 2px 5px rgba(25, 34, 55, 0.025);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.sources-resource-card.molecule-card:hover {
+  transform: translateY(-2px);
+  border-color: #d7d9f8;
+  box-shadow: 0 10px 28px rgba(35, 45, 75, 0.08);
+}
+
+.sources-resource-card > .molecule-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sources-resource-card__top {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.sources-resource-card__top h3 {
+  margin: 0;
+  color: #222a3b;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.sources-type-badge {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #4957bb;
+  background: #e9edff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.sources-type-badge--repositorio {
+  color: #28644b;
+  background: #dcf8e9;
+}
+
+.sources-type-badge--blog,
+.sources-type-badge--curso,
+.sources-type-badge--comunidad {
+  color: #7650b5;
+  background: #f0e8ff;
+}
+
+.sources-resource-card__url {
+  max-width: 100%;
+  margin-top: 6px;
+  overflow-wrap: anywhere;
+  color: #536ce2;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.sources-resource-card__url:hover {
+  text-decoration: underline;
+}
+
+.sources-resource-card .sources-tag-list {
+  margin-top: 14px;
+}
+
+.sources-resource-card__description {
+  margin: 14px 0 0;
+  color: #626c7d;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.sources-resource-card__actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.sources-resource-card__actions .atom-button {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: #5365d9;
+  border-color: #e1e4ed;
+  font-size: 13px;
+}
+
+.sources-resource-card__actions .sources-delete-button {
+  color: #c73c3c;
+}
+
+.sources-empty-state {
+  padding: 50px 24px;
+  border: 1px dashed #d5d9e4;
+  border-radius: 16px;
+  color: #687185;
+  background: rgba(255, 255, 255, 0.65);
+  text-align: center;
+}
+
+.sources-empty-state > span {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #7c83e8;
+  font-size: 32px;
+}
+
+.sources-empty-state h3 {
+  margin: 0;
+  color: #2a3142;
+  font-size: 17px;
+}
+
+.sources-empty-state p {
+  margin: 7px 0 0;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .sources-layout {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 720px;
+  }
+
+  .sources-list-panel {
+    padding: 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .sources-page {
+    padding: 82px 14px 32px;
+  }
+
+  .sources-toolbar {
+    min-height: 64px;
+    padding: 9px 14px;
+  }
+
+  .sources-toolbar__back {
+    font-size: 14px;
+  }
+
+  .sources-panel.molecule-card {
+    padding: 22px 18px;
+    border-radius: 16px;
+  }
+
+  .sources-panel__heading h1,
+  .sources-list-panel__heading h2 {
+    font-size: 21px;
+  }
+
+  .sources-filters {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .sources-resource-card.molecule-card {
+    padding: 18px;
+  }
+
+  .sources-resource-card__top h3 {
+    font-size: 16px;
+  }
+}

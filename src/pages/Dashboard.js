@@ -46,7 +46,9 @@ const Dashboard = () => {
           <div className="feature-card">
             <h3>Seguir Fuentes</h3>
             <p>Suscríbete a tus fuentes de contenido favoritas.</p>
-            <button disabled className="feature-button">Próximamente</button>
+            <button onClick={() => navigate('/sources')} className="feature-button">
+              Explorar fuentes
+            </button>
           </div>
 
           <div className="feature-card">
