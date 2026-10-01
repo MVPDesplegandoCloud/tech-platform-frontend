@@ -50,6 +50,7 @@ const FormField = forwardRef(
           value={value}
           onChange={onChange}
           disabled={disabled}
+          required={required}
           error={error}
           ariaLabel={ariaLabel || label}
           ariaDescribedBy={ariaDescribedBy || undefined}
