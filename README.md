@@ -57,7 +57,7 @@ REACT_APP_IDENTITY_POOL_ID=us-east-1:xxxxx
 
 Ver [Infraestructura](#-infraestructura-cognito) abajo.
 
-### 4. Ejecutar en Desarrollo 
+### 4. Ejecutar en Desarrollo
 
 ```bash
 npm start
