@@ -43,22 +43,16 @@ DynamoDB / Recursos
 ```
 tech-platform-frontend/
 ├── src/
-│   ├── components/          # Componentes reutilizables
-│   │   └── ProtectedRoute.js
-│   ├── config/             # Configuración de servicios
-│   │   └── amplify.js
-│   ├── context/            # React Context (estado global)
-│   │   └── AuthContext.js
-│   ├── pages/              # Páginas/Vistas
-│   │   ├── Auth.css
-│   │   ├── ConfirmSignUp.js
-│   │   ├── Dashboard.css
-│   │   ├── Dashboard.js
-│   │   ├── Login.js
-│   │   └── Register.js
-│   ├── App.js              # Router principal
-│   ├── App.css
+│   ├── components/         # Átomos, moléculas, organismos y rutas protegidas
+│   ├── config/             # Configuración de servicios (Amplify)
+│   ├── context/            # Estado global de autenticación
+│   ├── features/           # Módulos por dominio (API, servicio, mapper, mock)
+│   ├── hooks/              # Estado y acciones reutilizables de React
+│   ├── pages/               # Páginas/Vistas
+│   ├── shared/api/          # Cliente HTTP común
+│   ├── App.js               # Router principal
 │   └── index.js
+├── mock-server/             # Servidor local opcional para simular la API
 ├── public/                 # Activos estáticos
 ├── amplify/               # Configuración de Amplify (generada automáticamente)
 ├── .env.example           # Template de variables de entorno
@@ -190,6 +184,38 @@ El componente `ProtectedRoute` verifica autenticación:
 ```
 
 Si el usuario no está autenticado, se redirige a `/login`.
+
+### Arquitectura de intereses
+
+La pantalla `/interests` separa la vista, el estado y el almacenamiento:
+
+```text
+UserInterests.jsx
+  → TechInterestsForm / AddInterestForm / InterestItem
+  → useInterests.js
+  → features/interests/services/interests.service.js
+  → features/interests/mocks/interests.mock.js
+```
+
+- `UserInterests.jsx` conecta la pantalla con las acciones del hook.
+- `TechInterestsForm` administra la lista que se muestra y delega las altas y guardados.
+- `useInterests.js` gestiona la carga, los estados de error/éxito y vuelve a leer la lista después de una operación.
+- `interests.service.js` valida las operaciones y actualmente usa el mock en memoria. Las llamadas de la API real están preparadas, pero comentadas.
+- `interests.mock.js` es el almacén temporal. Sus registros usan `{ id, technology, level, description }`. Los cambios existen mientras la aplicación sigue cargada; al reiniciarla, vuelve al conjunto inicial.
+
+El modelo que consume la interfaz usa `name`. El servicio traduce entre `name` y `technology`, así la vista puede trabajar con su modelo y el mock conserva el campo `technology`.
+
+#### Flujo para agregar un interés
+
+1. `AddInterestForm` recoge el nombre y el nivel y notifica a `TechInterestsForm`.
+2. `TechInterestsForm` llama a la propiedad `onAdd` recibida desde la página.
+3. `UserInterests.jsx` llama a `addInterests` del hook.
+4. El hook llama a `createInterest` del servicio, que agrega el registro al mock con `technology`.
+5. El hook vuelve a cargar los intereses desde el servicio; esa respuesta actualiza la lista visible.
+
+Para cambiar el almacenamiento por endpoints reales, activa las llamadas correspondientes en `interests.service.js`. Las funciones de endpoint están en `features/interests/api/interests.api.js`; usan `shared/api/http-client.js`, que define la URL base mediante `REACT_APP_API_URL`, adjunta el token si existe y normaliza errores HTTP.
+
+Configura la URL local de API con `REACT_APP_API_URL` en `.env.local`. Su valor por defecto es `http://localhost:3001/api`.
 
 ## 🔄 Flujo de Autenticación
 

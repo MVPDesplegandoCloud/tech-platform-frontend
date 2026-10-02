@@ -1,0 +1,18 @@
+{
+  "users": {
+    "example_user_123": [
+      {
+        "technology": "Spring AI",
+        "level": 5
+      },
+      {
+        "technology": "Java",
+        "level": 4
+      },
+      {
+        "technology": "AWS",
+        "level": 4
+      }
+    ]
+  }
+}
