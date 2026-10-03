@@ -5,7 +5,7 @@ const SUBSCRIPTIONS_API_URL = process.env.REACT_APP_SUBSCRIPTIONS_API_URL
 
 const getAccessToken = async () => {
   const session = await fetchAuthSession();
-  const token = session.tokens?.accessToken?.toString();
+  const token = session.tokens?.idToken?.toString();
 
   if (!token) {
     throw new Error('No se encontró una sesión autenticada. Vuelve a iniciar sesión.');
