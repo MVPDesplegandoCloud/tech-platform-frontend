@@ -279,12 +279,20 @@
   margin-top: 18px;
 }
 
-.sources-resource-card__actions .atom-button {
+.sources-resource-card__actions .atom-button--secondary {
   min-height: 38px;
   padding: 8px 14px;
   border-radius: 10px;
   color: #5365d9;
   border-color: #e1e4ed;
+  font-size: 13px;
+}
+
+.sources-resource-card__actions .atom-button--primary {
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: #fff;
   font-size: 13px;
 }
 

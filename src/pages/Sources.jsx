@@ -64,7 +64,13 @@ const Sources = () => {
       setSubscribedUrls((current) => [...new Set([...current, source.url])]);
       setFeedback({ type: 'success', message: `Te suscribiste a ${source.name}.` });
     } catch (error) {
-      setFeedback({ type: 'error', message: error.message || 'No se pudo crear la suscripción.' });
+      const isNetworkError = error instanceof TypeError;
+      setFeedback({
+        type: 'error',
+        message: isNetworkError
+          ? 'No se pudo conectar con la API. Revisa la configuración CORS de API Gateway para permitir el origen de esta app, el método OPTIONS y los headers Authorization y Content-Type.'
+          : error.message || 'No se pudo crear la suscripción.',
+      });
     } finally {
       setPendingUrl('');
     }
