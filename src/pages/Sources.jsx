@@ -4,56 +4,70 @@ import Button from '../components/atoms/Button/Button';
 import Input from '../components/atoms/Input/Input';
 import Label from '../components/atoms/Label/Label';
 import Card from '../components/molecules/Card/Card';
+import { createSubscription } from '../services/subscriptions';
 import './Sources.css';
 
 const SOURCE_TYPES = ['Documentación', 'Repositorio', 'Blog', 'Curso', 'Comunidad', 'Otro'];
 
 const INITIAL_SOURCES = [
   {
-    id: 'github',
-    name: 'GitHub',
-    url: 'https://github.com/',
-    type: 'Repositorio',
-    technologies: ['Git', 'Open Source'],
-    description: 'Explorar proyectos de código abierto y aprender de ejemplos reales.',
+    id: 'infoq',
+    name: 'InfoQ',
+    url: 'https://feed.infoq.com/InfoQ/',
+    type: 'Blog',
+    technologies: ['Desarrollo', 'Arquitectura', 'Cloud'],
+    description: 'Artículos, noticias y entrevistas sobre desarrollo de software y arquitectura.',
   },
   {
-    id: 'react-docs',
-    name: 'Documentación de React',
-    url: 'https://es.react.dev/',
-    type: 'Documentación',
-    technologies: ['React', 'JavaScript'],
-    description: 'Guías oficiales y tutoriales interactivos de React.',
+    id: 'aws-news',
+    name: 'AWS News Blog',
+    url: 'https://aws.amazon.com/blogs/aws/feed/',
+    type: 'Blog',
+    technologies: ['AWS', 'Cloud'],
+    description: 'Novedades y anuncios oficiales de Amazon Web Services.',
   },
   {
-    id: 'mdn',
-    name: 'MDN Web Docs',
-    url: 'https://developer.mozilla.org/es/',
-    type: 'Documentación',
-    technologies: ['HTML', 'CSS', 'JavaScript'],
-    description: 'Referencia completa y confiable de tecnologías web.',
+    id: 'mozilla-hacks',
+    name: 'Mozilla Hacks',
+    url: 'https://hacks.mozilla.org/feed/',
+    type: 'Blog',
+    technologies: ['Web', 'JavaScript', 'Mozilla'],
+    description: 'Artículos técnicos sobre tecnologías web de Mozilla.',
   },
 ];
 
 const Sources = () => {
   const navigate = useNavigate();
-  const [sources, setSources] = useState(INITIAL_SOURCES);
+  const [subscribedUrls, setSubscribedUrls] = useState([]);
+  const [pendingUrl, setPendingUrl] = useState('');
+  const [feedback, setFeedback] = useState(null);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('Todos');
 
   const filteredSources = useMemo(() => {
     const query = search.trim().toLowerCase();
-    return sources.filter((source) => {
+    return INITIAL_SOURCES.filter((source) => {
       const matchesType = typeFilter === 'Todos' || source.type === typeFilter;
       const searchable = [source.name, source.url, source.description, ...source.technologies]
         .join(' ')
         .toLowerCase();
       return matchesType && (!query || searchable.includes(query));
     });
-  }, [search, sources, typeFilter]);
+  }, [search, typeFilter]);
 
-  const handleDelete = (id) => {
-    setSources((current) => current.filter((source) => source.id !== id));
+  const handleSubscribe = async (source) => {
+    setPendingUrl(source.url);
+    setFeedback(null);
+
+    try {
+      await createSubscription(source.url);
+      setSubscribedUrls((current) => [...new Set([...current, source.url])]);
+      setFeedback({ type: 'success', message: `Te suscribiste a ${source.name}.` });
+    } catch (error) {
+      setFeedback({ type: 'error', message: error.message || 'No se pudo crear la suscripción.' });
+    } finally {
+      setPendingUrl('');
+    }
   };
 
   return (
@@ -69,8 +83,8 @@ const Sources = () => {
           <div className="sources-list-panel__heading">
             <div>
               <p className="sources-eyebrow">EXPLORAR</p>
-              <h2 id="sources-list-title">Mis fuentes</h2>
-              <p>{sources.length} {sources.length === 1 ? 'fuente guardada' : 'fuentes guardadas'}</p>
+              <h2 id="sources-list-title">Suscripciones RSS</h2>
+              <p>Elige los feeds tecnológicos que quieres agregar a tu cuenta.</p>
             </div>
           </div>
 
@@ -93,6 +107,12 @@ const Sources = () => {
             </div>
           </div>
 
+          {feedback && (
+            <p className={`sources-feedback sources-feedback--${feedback.type}`} role="status">
+              {feedback.message}
+            </p>
+          )}
+
           <div className="sources-list" aria-live="polite">
             {filteredSources.map((source) => (
               <Card className="sources-resource-card" elevation="sm" key={source.id}>
@@ -114,7 +134,15 @@ const Sources = () => {
                 )}
                 {source.description && <p className="sources-resource-card__description">{source.description}</p>}
                 <div className="sources-resource-card__actions">
-                  <Button variant="secondary" size="sm" className="sources-delete-button" onClick={() => handleDelete(source.id)}>Eliminar</Button>
+                  <Button
+                    variant={subscribedUrls.includes(source.url) ? 'secondary' : 'primary'}
+                    size="sm"
+                    onClick={() => handleSubscribe(source)}
+                    isLoading={pendingUrl === source.url}
+                    disabled={subscribedUrls.includes(source.url) || Boolean(pendingUrl)}
+                  >
+                    {subscribedUrls.includes(source.url) ? 'Suscrito' : 'Suscribirme'}
+                  </Button>
                 </div>
               </Card>
             ))}

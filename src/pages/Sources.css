@@ -76,6 +76,23 @@
   line-height: 1.5;
 }
 
+.sources-feedback {
+  margin: 0 0 18px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.sources-feedback--success {
+  color: #256346;
+  background: #e5f8ed;
+}
+
+.sources-feedback--error {
+  color: #a83232;
+  background: #fff0f0;
+}
+
 .sources-eyebrow {
   margin: 0 0 7px;
   color: #6a70e8;
@@ -269,10 +286,6 @@
   color: #5365d9;
   border-color: #e1e4ed;
   font-size: 13px;
-}
-
-.sources-resource-card__actions .sources-delete-button {
-  color: #c73c3c;
 }
 
 .sources-empty-state {
