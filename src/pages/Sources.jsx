@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/atoms/Button/Button';
 import Input from '../components/atoms/Input/Input';
 import Label from '../components/atoms/Label/Label';
 import Card from '../components/molecules/Card/Card';
-import { createSubscription } from '../services/subscriptions';
+import { createSubscription, getSubscriptions } from '../services/subscriptions';
 import './Sources.css';
 
 const SOURCE_TYPES = ['Documentación', 'Repositorio', 'Blog', 'Curso', 'Comunidad', 'Otro'];
@@ -36,13 +36,48 @@ const INITIAL_SOURCES = [
   },
 ];
 
+const normalizeUrl = (value) => {
+  try {
+    const url = new URL(value);
+    return `${url.origin}${url.pathname.replace(/\/+$/, '')}${url.search}`;
+  } catch {
+    return value.trim().replace(/\/+$/, '');
+  }
+};
+
 const Sources = () => {
   const navigate = useNavigate();
-  const [subscribedUrls, setSubscribedUrls] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const [pendingUrl, setPendingUrl] = useState('');
   const [feedback, setFeedback] = useState(null);
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('Todos');
+
+  useEffect(() => {
+    let isActive = true;
+
+    getSubscriptions()
+      .then((items) => {
+        if (isActive) setSubscriptions(items);
+      })
+      .catch((error) => {
+        if (isActive) {
+          const isNetworkError = error instanceof TypeError;
+          setLoadError(isNetworkError
+            ? 'No se pudo conectar con la API. Revisa CORS para este origen y que API Gateway permita GET, OPTIONS y Authorization.'
+            : error.message || 'No se pudieron cargar tus suscripciones.');
+        }
+      })
+      .finally(() => {
+        if (isActive) setIsLoadingSubscriptions(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const filteredSources = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -55,13 +90,25 @@ const Sources = () => {
     });
   }, [search, typeFilter]);
 
+  const isSubscribed = (url) => subscriptions.some(
+    (item) => normalizeUrl(item.normalizedUrl || item.url) === normalizeUrl(url)
+  );
+
   const handleSubscribe = async (source) => {
     setPendingUrl(source.url);
     setFeedback(null);
 
     try {
-      await createSubscription(source.url);
-      setSubscribedUrls((current) => [...new Set([...current, source.url])]);
+      const result = await createSubscription(source.url);
+      const savedSubscription = result?.subscription
+        || (result?.url || result?.normalizedUrl
+          ? result
+          : { url: source.url, normalizedUrl: normalizeUrl(source.url), subscribedAt: new Date().toISOString() });
+      setSubscriptions((current) => (
+        current.some((item) => normalizeUrl(item.normalizedUrl || item.url) === normalizeUrl(source.url))
+          ? current
+          : [...current, savedSubscription]
+      ));
       setFeedback({ type: 'success', message: `Te suscribiste a ${source.name}.` });
     } catch (error) {
       const isNetworkError = error instanceof TypeError;
@@ -89,10 +136,41 @@ const Sources = () => {
           <div className="sources-list-panel__heading">
             <div>
               <p className="sources-eyebrow">EXPLORAR</p>
-              <h2 id="sources-list-title">Suscripciones RSS</h2>
+              <h2 id="sources-list-title">Feeds RSS</h2>
               <p>Elige los feeds tecnológicos que quieres agregar a tu cuenta.</p>
             </div>
           </div>
+
+          <section className="sources-saved" aria-labelledby="saved-subscriptions-title">
+            <div className="sources-saved__heading">
+              <h3 id="saved-subscriptions-title">Tus suscripciones</h3>
+              {!isLoadingSubscriptions && <span>{subscriptions.length}</span>}
+            </div>
+            {isLoadingSubscriptions && <p className="sources-saved__message" role="status">Cargando tus suscripciones…</p>}
+            {loadError && <p className="sources-feedback sources-feedback--error" role="alert">{loadError}</p>}
+            {!isLoadingSubscriptions && !loadError && subscriptions.length === 0 && (
+              <p className="sources-saved__message">Todavía no tienes feeds guardados.</p>
+            )}
+            {subscriptions.length > 0 && (
+              <ul className="sources-saved__list">
+                {subscriptions.map((subscription, index) => {
+                  const url = subscription.url || subscription.normalizedUrl;
+                  return (
+                    <li key={`${subscription.normalizedUrl || url}-${index}`}>
+                      <a href={url} target="_blank" rel="noreferrer">{url}</a>
+                      {subscription.subscribedAt && (
+                        <time dateTime={subscription.subscribedAt}>
+                          Suscrito el {new Date(subscription.subscribedAt).toLocaleDateString()}
+                        </time>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+          </section>
+
+          <h3 className="sources-catalog-title">Explorar feeds recomendados</h3>
 
           <div className="sources-filters">
             <div className="sources-search">
@@ -141,13 +219,13 @@ const Sources = () => {
                 {source.description && <p className="sources-resource-card__description">{source.description}</p>}
                 <div className="sources-resource-card__actions">
                   <Button
-                    variant={subscribedUrls.includes(source.url) ? 'secondary' : 'primary'}
+                    variant={isSubscribed(source.url) ? 'secondary' : 'primary'}
                     size="sm"
                     onClick={() => handleSubscribe(source)}
                     isLoading={pendingUrl === source.url}
-                    disabled={subscribedUrls.includes(source.url) || Boolean(pendingUrl)}
+                    disabled={isSubscribed(source.url) || Boolean(pendingUrl)}
                   >
-                    {subscribedUrls.includes(source.url) ? 'Suscrito' : 'Suscribirme'}
+                    {isSubscribed(source.url) ? 'Suscrito' : 'Suscribirme'}
                   </Button>
                 </div>
               </Card>
