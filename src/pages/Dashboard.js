@@ -54,7 +54,9 @@ const Dashboard = () => {
           <div className="feature-card">
             <h3>Mi Feed</h3>
             <p>Accede a tu feed personalizado con contenido relevante.</p>
-            <button disabled className="feature-button">Próximamente</button>
+            <button onClick={() => navigate('/feed')} className="feature-button">
+              Ver mi feed
+            </button>
           </div>
 
           <div className="feature-card">

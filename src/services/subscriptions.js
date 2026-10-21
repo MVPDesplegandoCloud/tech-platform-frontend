@@ -2,8 +2,10 @@ import { fetchAuthSession } from 'aws-amplify/auth';
 
 const SUBSCRIPTIONS_API_URL = process.env.REACT_APP_SUBSCRIPTIONS_API_URL
   || 'https://nd4qj5m64g.execute-api.us-east-2.amazonaws.com/v1/subscriptions';
+const API_BASE_URL = SUBSCRIPTIONS_API_URL.replace(/\/subscriptions\/?$/, '');
+const FEED_API_URL = process.env.REACT_APP_FEED_API_URL || `${API_BASE_URL}/feed`;
 
-const getAccessToken = async () => {
+const getIdToken = async () => {
   const session = await fetchAuthSession();
   const token = session.tokens?.idToken?.toString();
 
@@ -33,7 +35,7 @@ const readResponse = async (response) => {
 };
 
 export const getSubscriptions = async () => {
-  const token = await getAccessToken();
+  const token = await getIdToken();
   const response = await fetch(SUBSCRIPTIONS_API_URL, {
     method: 'GET',
     headers: { Authorization: token },
@@ -48,7 +50,7 @@ export const getSubscriptions = async () => {
 };
 
 export const createSubscription = async (url) => {
-  const token = await getAccessToken();
+  const token = await getIdToken();
   const response = await fetch(SUBSCRIPTIONS_API_URL, {
     method: 'POST',
     headers: {
@@ -59,4 +61,19 @@ export const createSubscription = async (url) => {
   });
 
   return readResponse(response);
+};
+
+export const getRecommendedFeed = async () => {
+  const token = await getIdToken();
+  const response = await fetch(FEED_API_URL, {
+    method: 'GET',
+    headers: { Authorization: token },
+  });
+  const recommendations = await readResponse(response);
+
+  if (!Array.isArray(recommendations)) {
+    throw new Error('La respuesta de /feed no contiene una lista de recomendaciones válida.');
+  }
+
+  return recommendations;
 };
