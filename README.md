@@ -232,7 +232,9 @@ REACT_APP_IDENTITY_POOL_ID        # ID del Identity Pool
 
 ### Opción 1: AWS Amplify (Recomendado)
 
-Amplify Hosting se conecta automáticamente a GitHub:
+Para crear Amplify Hosting con CDK desde este repositorio, sigue [infra/amplify/README.md](./infra/amplify/README.md). El stack conecta la rama `main` de GitHub y activa los despliegues automáticos.
+
+También puedes configurarlo manualmente desde Amplify Console:
 
 1. Ve a [AWS Amplify Console](https://console.aws.amazon.com/amplify)
 2. Haz clic en "New app" → "Host web app"

@@ -8,6 +8,7 @@ import ConfirmSignUp from './pages/ConfirmSignUp';
 import Dashboard from './pages/Dashboard';
 import UserInterests from './pages/UserInterests';
 import Sources from './pages/Sources';
+import Feed from './pages/Feed';
 import './config/amplify';
 import './App.css';
 
@@ -53,6 +54,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <Sources />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/feed"
+        element={
+          <ProtectedRoute>
+            <Feed />
           </ProtectedRoute>
         }
       />

@@ -1,0 +1,199 @@
+.feed-page {
+  min-height: 100vh;
+  padding: 104px 24px 56px;
+  color: #202638;
+  background: #f3f4f8;
+}
+
+.feed-toolbar {
+  position: fixed;
+  z-index: 5;
+  inset: 0 0 auto;
+  min-height: 72px;
+  padding: 12px clamp(20px, 4vw, 64px);
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #e7e8ef;
+  backdrop-filter: blur(12px);
+}
+
+.feed-toolbar__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  padding: 8px 0;
+  color: #283044;
+  background: transparent;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.feed-toolbar__back span {
+  font-size: 23px;
+  font-weight: 400;
+}
+
+.feed-content {
+  width: min(920px, 100%);
+  margin: 0 auto;
+}
+
+.feed-heading {
+  margin-bottom: 24px;
+}
+
+.feed-eyebrow {
+  margin: 0 0 7px;
+  color: #6a70e8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.feed-heading h1 {
+  margin: 0;
+  color: #202638;
+  font-size: clamp(28px, 4vw, 36px);
+  letter-spacing: -0.03em;
+}
+
+.feed-heading > p:last-child {
+  margin: 8px 0 0;
+  color: #687185;
+  font-size: 15px;
+}
+
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.feed-item.molecule-card {
+  max-width: none;
+  margin: 0;
+  padding: 21px 23px;
+  border: 1px solid #e5e8ef;
+  border-radius: 15px;
+  background: #fff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.feed-item.molecule-card:hover {
+  transform: translateY(-2px);
+  border-color: #d7d9f8;
+  box-shadow: 0 10px 28px rgba(35, 45, 75, 0.08);
+}
+
+.feed-item > .molecule-card__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.feed-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 11px;
+}
+
+.feed-item__interest,
+.feed-item__score {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #5365cb;
+  background: #eef0ff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.feed-item__score {
+  color: #526072;
+  background: #f0f2f5;
+}
+
+.feed-item h2 {
+  margin: 0;
+  color: #222a3b;
+  font-size: 18px;
+  line-height: 1.45;
+}
+
+.feed-item h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.feed-item h2 a:hover {
+  color: #536ce2;
+  text-decoration: underline;
+}
+
+.feed-item__source {
+  margin-top: 12px;
+  color: #536ce2;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.feed-item__source:hover {
+  text-decoration: underline;
+}
+
+.feed-state,
+.feed-error {
+  padding: 22px;
+  border: 1px solid #e5e8ef;
+  border-radius: 14px;
+  color: #687185;
+  background: #fff;
+}
+
+.feed-state h2 {
+  margin: 0;
+  color: #273044;
+  font-size: 18px;
+}
+
+.feed-state p,
+.feed-error p {
+  margin: 0 0 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.feed-error {
+  border-color: #f4d1d1;
+  color: #a83232;
+  background: #fff4f4;
+}
+
+@media (max-width: 600px) {
+  .feed-page {
+    padding: 88px 14px 32px;
+  }
+
+  .feed-toolbar {
+    min-height: 64px;
+    padding: 9px 14px;
+  }
+
+  .feed-toolbar__back {
+    font-size: 14px;
+  }
+
+  .feed-item.molecule-card {
+    padding: 18px;
+  }
+
+  .feed-item h2 {
+    font-size: 16px;
+  }
+}
