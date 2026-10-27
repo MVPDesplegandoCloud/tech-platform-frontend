@@ -39,10 +39,22 @@ const INITIAL_SOURCES = [
 const normalizeUrl = (value) => {
   try {
     const url = new URL(value);
-    return `${url.origin}${url.pathname.replace(/\/+$/, '')}${url.search}`;
+    // Feed APIs may lowercase the path while normalizing URLs. Treat that and
+    // a trailing slash as equivalent when matching saved feeds to the catalog.
+    const pathname = url.pathname.toLowerCase().replace(/\/+$/, '');
+    return `${url.origin.toLowerCase()}${pathname}${url.search}`;
   } catch {
     return value.trim().replace(/\/+$/, '');
   }
+};
+
+const hasSubscriptionForUrl = (items, url) => {
+  const sourceUrl = normalizeUrl(url);
+  return items.some((item) =>
+    [item.normalizedUrl, item.url]
+      .filter(Boolean)
+      .some((savedUrl) => normalizeUrl(savedUrl) === sourceUrl)
+  );
 };
 
 const Sources = () => {
@@ -90,11 +102,11 @@ const Sources = () => {
     });
   }, [search, typeFilter]);
 
-  const isSubscribed = (url) => subscriptions.some(
-    (item) => normalizeUrl(item.normalizedUrl || item.url) === normalizeUrl(url)
-  );
+  const isSubscribed = (url) => hasSubscriptionForUrl(subscriptions, url);
 
   const handleSubscribe = async (source) => {
+    if (isSubscribed(source.url)) return;
+
     setPendingUrl(source.url);
     setFeedback(null);
 
@@ -105,18 +117,35 @@ const Sources = () => {
           ? result
           : { url: source.url, normalizedUrl: normalizeUrl(source.url), subscribedAt: new Date().toISOString() });
       setSubscriptions((current) => (
-        current.some((item) => normalizeUrl(item.normalizedUrl || item.url) === normalizeUrl(source.url))
+        hasSubscriptionForUrl(current, source.url)
           ? current
           : [...current, savedSubscription]
       ));
       setFeedback({ type: 'success', message: `Te suscribiste a ${source.name}.` });
     } catch (error) {
       const isNetworkError = error instanceof TypeError;
+      const isAlreadySubscribed = /already subscribed|ya est[aá]s suscrit/i.test(error.message || '');
+
+      if (isAlreadySubscribed) {
+        try {
+          const latestSubscriptions = await getSubscriptions();
+          setSubscriptions(latestSubscriptions);
+          if (hasSubscriptionForUrl(latestSubscriptions, source.url)) {
+            setFeedback({ type: 'success', message: `Ya estás suscrito a ${source.name}.` });
+            return;
+          }
+        } catch {
+          // Keep the original API error visible if the refresh also fails.
+        }
+      }
+
       setFeedback({
         type: 'error',
         message: isNetworkError
           ? 'No se pudo conectar con la API. Revisa la configuración CORS de API Gateway para permitir el origen de esta app, el método OPTIONS y los headers Authorization y Content-Type.'
-          : error.message || 'No se pudo crear la suscripción.',
+          : isAlreadySubscribed
+            ? `La API indica que ya estás suscrito a ${source.name}. Actualiza la página para sincronizar la lista.`
+            : error.message || 'No se pudo crear la suscripción.',
       });
     } finally {
       setPendingUrl('');
@@ -223,7 +252,7 @@ const Sources = () => {
                     size="sm"
                     onClick={() => handleSubscribe(source)}
                     isLoading={pendingUrl === source.url}
-                    disabled={isSubscribed(source.url) || Boolean(pendingUrl)}
+                    disabled={isLoadingSubscriptions || isSubscribed(source.url) || Boolean(pendingUrl)}
                   >
                     {isSubscribed(source.url) ? 'Suscrito' : 'Suscribirme'}
                   </Button>
