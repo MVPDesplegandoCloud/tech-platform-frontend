@@ -13,6 +13,7 @@ const TechInterestsForm = ({
   initialInterests = [],
   onSave,
   isLoading = false,
+  readOnly = false,
 }) => {
   const [interests, setInterests] = useState(initialInterests);
 
@@ -50,6 +51,7 @@ const TechInterestsForm = ({
    */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (readOnly || !onSave) return;
     try {
       await onSave(interests);
     } catch (error) {
@@ -59,12 +61,14 @@ const TechInterestsForm = ({
 
   return (
     <form className="organism-tech-interests-form" onSubmit={handleSubmit}>
-      <div className="organism-tech-interests-form__section">
-        <h3 className="organism-tech-interests-form__subtitle">
-          Añadir Nuevo Interés
-        </h3>
-        <AddInterestForm onAddInterest={handleAddInterest} />
-      </div>
+      {!readOnly && (
+        <div className="organism-tech-interests-form__section">
+          <h3 className="organism-tech-interests-form__subtitle">
+            Añadir Nuevo Interés
+          </h3>
+          <AddInterestForm onAddInterest={handleAddInterest} />
+        </div>
+      )}
 
       {interests.length > 0 && (
         <div className="organism-tech-interests-form__section">
@@ -72,10 +76,10 @@ const TechInterestsForm = ({
             Mis Intereses
           </h3>
 
-          <div className="organism-tech-interests-form__table-header">
+          <div className={`organism-tech-interests-form__table-header${readOnly ? ' organism-tech-interests-form__table-header--readonly' : ''}`}>
             <div className="organism-tech-interests-form__col-name">Tecnología</div>
             <div className="organism-tech-interests-form__col-level">Nivel</div>
-            <div className="organism-tech-interests-form__col-actions">Acciones</div>
+            {!readOnly && <div className="organism-tech-interests-form__col-actions">Acciones</div>}
           </div>
 
           <div className="organism-tech-interests-form__list">
@@ -85,6 +89,7 @@ const TechInterestsForm = ({
                 id={interest.id}
                 name={interest.name}
                 level={interest.level}
+                readonly={readOnly}
                 onLevelChange={(level) => handleUpdateLevel(interest.id, level)}
                 onDelete={handleDeleteInterest}
               />
@@ -93,17 +98,19 @@ const TechInterestsForm = ({
         </div>
       )}
 
-      <div className="organism-tech-interests-form__actions">
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          isLoading={isLoading}
-          disabled={isLoading || interests.length === 0}
-        >
-          Guardar Cambios
-        </Button>
-      </div>
+      {!readOnly && (
+        <div className="organism-tech-interests-form__actions">
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            isLoading={isLoading}
+            disabled={isLoading || interests.length === 0}
+          >
+            Guardar Cambios
+          </Button>
+        </div>
+      )}
     </form>
   );
 };
@@ -116,8 +123,9 @@ TechInterestsForm.propTypes = {
       level: PropTypes.number.isRequired,
     })
   ),
-  onSave: PropTypes.func.isRequired,
+  onSave: PropTypes.func,
   isLoading: PropTypes.bool,
+  readOnly: PropTypes.bool,
 };
 
 export default TechInterestsForm;
