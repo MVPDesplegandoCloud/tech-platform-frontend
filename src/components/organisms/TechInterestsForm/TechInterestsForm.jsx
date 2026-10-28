@@ -53,8 +53,7 @@ const TechInterestsForm = ({
   /**
    * Handle form submission
    */
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (readOnly || !onSave) return;
     try {
       await onSave(interests);
@@ -64,7 +63,7 @@ const TechInterestsForm = ({
   };
 
   return (
-    <form className="organism-tech-interests-form" onSubmit={handleSubmit}>
+    <div className="organism-tech-interests-form">
       {canAdd && (
         <div className="organism-tech-interests-form__section">
           <h3 className="organism-tech-interests-form__subtitle">
@@ -105,17 +104,18 @@ const TechInterestsForm = ({
       {!readOnly && (
         <div className="organism-tech-interests-form__actions">
           <Button
-            type="submit"
+            type="button"
             variant="primary"
             size="lg"
             isLoading={isLoading}
             disabled={isLoading || interests.length === 0}
+            onClick={handleSubmit}
           >
             Guardar Cambios
           </Button>
         </div>
       )}
-    </form>
+    </div>
   );
 };
 
