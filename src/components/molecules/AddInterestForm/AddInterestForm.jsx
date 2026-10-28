@@ -13,15 +13,16 @@ const AddInterestForm = ({ onAddInterest, isLoading = false }) => {
   const [technology, setTechnology] = useState('');
   const [level, setLevel] = useState(3);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (technology.trim()) {
-      onAddInterest({
-        name: technology.trim(),
-        level,
-      });
-      setTechnology('');
-      setLevel(3);
+      try {
+        await onAddInterest({ name: technology.trim(), level });
+        setTechnology('');
+        setLevel(3);
+      } catch {
+        // The parent displays the API error and keeps the entered value.
+      }
     }
   };
 

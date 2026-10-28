@@ -12,21 +12,25 @@ import './TechInterestsForm.css';
 const TechInterestsForm = ({ 
   initialInterests = [],
   onSave,
+  onAddInterest,
   isLoading = false,
+  isAdding = false,
   readOnly = false,
+  canAdd = false,
 }) => {
   const [interests, setInterests] = useState(initialInterests);
 
   /**
    * Add new interest
    */
-  const handleAddInterest = useCallback((newInterest) => {
+  const handleAddInterest = useCallback(async (newInterest) => {
+    const savedInterest = onAddInterest ? await onAddInterest(newInterest) : newInterest;
     const interest = {
-      id: Date.now().toString(),
-      ...newInterest,
+      id: savedInterest.id || Date.now().toString(),
+      ...savedInterest,
     };
     setInterests((prev) => [...prev, interest]);
-  }, []);
+  }, [onAddInterest]);
 
   /**
    * Update interest level
@@ -61,12 +65,12 @@ const TechInterestsForm = ({
 
   return (
     <form className="organism-tech-interests-form" onSubmit={handleSubmit}>
-      {!readOnly && (
+      {canAdd && (
         <div className="organism-tech-interests-form__section">
           <h3 className="organism-tech-interests-form__subtitle">
             Añadir Nuevo Interés
           </h3>
-          <AddInterestForm onAddInterest={handleAddInterest} />
+          <AddInterestForm onAddInterest={handleAddInterest} isLoading={isAdding} />
         </div>
       )}
 
@@ -124,8 +128,11 @@ TechInterestsForm.propTypes = {
     })
   ),
   onSave: PropTypes.func,
+  onAddInterest: PropTypes.func,
   isLoading: PropTypes.bool,
+  isAdding: PropTypes.bool,
   readOnly: PropTypes.bool,
+  canAdd: PropTypes.bool,
 };
 
 export default TechInterestsForm;
