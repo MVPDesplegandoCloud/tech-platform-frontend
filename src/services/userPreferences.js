@@ -46,12 +46,13 @@ export const getUserInterests = async () => {
     headers: { Authorization: token },
   });
   const data = await readResponse(response);
+  const interests = Array.isArray(data) ? data : data?.interests;
 
-  if (!Array.isArray(data?.interests)) {
+  if (!Array.isArray(interests)) {
     throw new Error('La respuesta de User Preferences no contiene una lista de intereses válida.');
   }
 
-  return data.interests.map((interest, index) => ({
+  return interests.map((interest, index) => ({
     id: String(interest.id || interest.interestId || interest.interestNormalizedName || index),
     name: interest.name || interest.interestNormalizedName || '',
     level: Number(interest.level ?? interest.interestLevel ?? 5),
