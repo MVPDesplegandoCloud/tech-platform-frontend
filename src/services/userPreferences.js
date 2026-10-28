@@ -58,3 +58,27 @@ export const getUserInterests = async () => {
     level: Number(interest.level ?? interest.interestLevel ?? 5),
   }));
 };
+
+export const createUserInterest = async ({ name, level }) => {
+  const token = await getIdToken();
+  const response = await fetch(USER_PREFERENCES_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ name: name.trim(), level }),
+  });
+  const data = await readResponse(response);
+  const interest = data?.interest || data;
+
+  if (!interest || typeof interest !== 'object') {
+    throw new Error('La respuesta de User Preferences no contiene el interés creado.');
+  }
+
+  return {
+    id: String(interest.id || interest.interestId || interest.interestNormalizedName || Date.now()),
+    name: interest.name || name.trim(),
+    level: Number(interest.level ?? interest.interestLevel ?? level ?? 5),
+  };
+};

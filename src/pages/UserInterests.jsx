@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/molecules/Card/Card';
 import TechInterestsForm from '../components/organisms/TechInterestsForm/TechInterestsForm';
-import { getUserInterests } from '../services/userPreferences';
+import { createUserInterest, getUserInterests } from '../services/userPreferences';
 import './UserInterests.css';
 
 /**
@@ -13,6 +13,8 @@ const UserInterests = () => {
   const [interests, setInterests] = useState([]);
   const [isLoadingInterests, setIsLoadingInterests] = useState(true);
   const [loadError, setLoadError] = useState('');
+  const [addError, setAddError] = useState('');
+  const [isAddingInterest, setIsAddingInterest] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,23 @@ const UserInterests = () => {
     };
   }, []);
 
+  const handleAddInterest = async (interest) => {
+    setIsAddingInterest(true);
+    setAddError('');
+    try {
+      const savedInterest = await createUserInterest(interest);
+      setInterests((current) => [...current, savedInterest]);
+      return savedInterest;
+    } catch (error) {
+      setAddError(error instanceof TypeError
+        ? 'No se pudo conectar con User Preferences. Revisa CORS y que el endpoint POST /interests esté desplegado.'
+        : error.message || 'No se pudo agregar el interés.');
+      throw error;
+    } finally {
+      setIsAddingInterest(false);
+    }
+  };
+
   return (
     <div className="page-user-interests auth-container">
       <Card title="Mis Intereses Tecnológicos" elevation="lg">
@@ -47,8 +66,12 @@ const UserInterests = () => {
           {!isLoadingInterests && !loadError && interests.length === 0 && (
             <p role="status">Aún no tienes intereses guardados.</p>
           )}
+          {addError && <p className="page-user-interests__load-error" role="alert">{addError}</p>}
           <TechInterestsForm
             initialInterests={interests}
+            canAdd
+            onAddInterest={handleAddInterest}
+            isAdding={isAddingInterest || isLoadingInterests}
             readOnly
             key={isLoadingInterests ? 'loading' : 'loaded'}
           />
