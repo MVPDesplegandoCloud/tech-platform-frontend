@@ -32,6 +32,10 @@
   letter-spacing: 0.5px;
 }
 
+.organism-tech-interests-form__table-header--readonly {
+  grid-template-columns: 2fr 1fr;
+}
+
 .organism-tech-interests-form__col-name {
   text-align: left;
 }

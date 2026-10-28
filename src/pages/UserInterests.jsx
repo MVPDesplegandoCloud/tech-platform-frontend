@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/molecules/Card/Card';
 import TechInterestsForm from '../components/organisms/TechInterestsForm/TechInterestsForm';
+import { getUserInterests } from '../services/userPreferences';
 import './UserInterests.css';
 
 /**
@@ -9,46 +10,47 @@ import './UserInterests.css';
  * Allows users to manage their technology interests and proficiency levels
  */
 const UserInterests = () => {
-  const [interests, setInterests] = useState([
-    { id: '1', name: 'Spring AI', level: 4 },
-    { id: '2', name: 'Java', level: 3 },
-    { id: '3', name: 'AWS', level: 4 },
-    { id: '4', name: 'Docker', level: 5 },
-    { id: '5', name: 'React', level: 4 },
-  ]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [interests, setInterests] = useState([]);
+  const [isLoadingInterests, setIsLoadingInterests] = useState(true);
+  const [loadError, setLoadError] = useState('');
   const navigate = useNavigate();
 
-  /**
-   * Handle saving interests
-   */
-  const handleSaveInterests = async (updatedInterests) => {
-    setIsLoading(true);
-    try {
-      // Simula guardado en servidor
-      console.log('Saving interests:', updatedInterests);
-      setInterests(updatedInterests);
-      
-      // Aquí iría la llamada a la API
-      // await saveUserInterests(updatedInterests);
-      
-      // Simula delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error('Error saving interests:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  useEffect(() => {
+    let isActive = true;
+
+    getUserInterests()
+      .then((savedInterests) => {
+        if (isActive) setInterests(savedInterests);
+      })
+      .catch((error) => {
+        if (isActive) {
+          setLoadError(error instanceof TypeError
+            ? 'No se pudo conectar con User Preferences. Revisa CORS y que el endpoint GET /interests esté desplegado.'
+            : error.message || 'No se pudieron cargar tus intereses.');
+        }
+      })
+      .finally(() => {
+        if (isActive) setIsLoadingInterests(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   return (
     <div className="page-user-interests auth-container">
       <Card title="Mis Intereses Tecnológicos" elevation="lg">
         <div className="page-user-interests__content">
+          {isLoadingInterests && <p role="status">Cargando tus intereses…</p>}
+          {loadError && <p className="page-user-interests__load-error" role="alert">{loadError}</p>}
+          {!isLoadingInterests && !loadError && interests.length === 0 && (
+            <p role="status">Aún no tienes intereses guardados.</p>
+          )}
           <TechInterestsForm
             initialInterests={interests}
-            onSave={handleSaveInterests}
-            isLoading={isLoading}
+            readOnly
+            key={isLoadingInterests ? 'loading' : 'loaded'}
           />
 
           <div className="page-user-interests__footer">
