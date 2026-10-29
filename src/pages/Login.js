@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Auth.css';
 
@@ -9,6 +9,7 @@ const Login = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -40,6 +41,8 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h1>Iniciar Sesión</h1>
+
+        {location.state?.message && <div className="info-message" role="status">{location.state.message}</div>}
         
         {error && <div className="error-message">{error}</div>}
 
@@ -66,6 +69,10 @@ const Login = () => {
               required
               disabled={isLoading}
             />
+          </div>
+
+          <div className="auth-links auth-links--forgot-password">
+            <Link to="/forgot-password" state={{ email }}>¿Olvidaste tu contraseña?</Link>
           </div>
 
           <button type="submit" disabled={isLoading} className="submit-button">

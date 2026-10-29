@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import ConfirmSignUp from './pages/ConfirmSignUp';
+import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard';
 import UserInterests from './pages/UserInterests';
 import Sources from './pages/Sources';
@@ -36,6 +37,10 @@ function AppRoutes() {
       <Route 
         path="/confirm-signup" 
         element={<ConfirmSignUp />} 
+      />
+      <Route
+        path="/forgot-password"
+        element={isAuthenticated ? <Navigate to="/dashboard" replace /> : <ForgotPassword />}
       />
       <Route 
         path="/dashboard" 
