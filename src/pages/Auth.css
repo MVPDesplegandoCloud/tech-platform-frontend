@@ -149,6 +149,11 @@
   text-decoration: underline;
 }
 
+.auth-links--forgot-password {
+  align-self: flex-end;
+  margin: -8px 0 0;
+}
+
 .secondary-button {
   padding: 12px;
   background: white;
