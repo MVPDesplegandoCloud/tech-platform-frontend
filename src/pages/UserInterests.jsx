@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Card from '../components/molecules/Card/Card';
 import TechInterestsForm from '../components/organisms/TechInterestsForm/TechInterestsForm';
+import AuthenticatedToolbar from '../components/organisms/AuthenticatedToolbar/AuthenticatedToolbar';
 import { createUserInterest, getUserInterests } from '../services/userPreferences';
 import './UserInterests.css';
 
@@ -59,6 +60,7 @@ const UserInterests = () => {
 
   return (
     <div className="page-user-interests auth-container">
+      <AuthenticatedToolbar />
       <Card title="Mis Intereses Tecnológicos" elevation="lg">
         <div className="page-user-interests__content">
           {isLoadingInterests && <p role="status">Cargando tus intereses…</p>}

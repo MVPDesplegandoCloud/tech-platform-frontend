@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/atoms/Button/Button';
 import Card from '../components/molecules/Card/Card';
+import AuthenticatedToolbar from '../components/organisms/AuthenticatedToolbar/AuthenticatedToolbar';
 import { getRecommendedFeed } from '../services/subscriptions';
 import './Feed.css';
 
@@ -38,11 +39,7 @@ const Feed = () => {
 
   return (
     <main className="feed-page">
-      <header className="feed-toolbar">
-        <button className="feed-toolbar__back" onClick={() => navigate('/dashboard')} type="button">
-          <span aria-hidden="true">←</span> Tech Platform
-        </button>
-      </header>
+      <AuthenticatedToolbar />
 
       <div className="feed-content">
         <header className="feed-heading">

@@ -1,5 +1,8 @@
 .page-user-interests {
   min-height: 100vh;
+  flex-direction: column;
+  padding: 104px 24px 48px;
+  box-sizing: border-box;
 }
 
 .page-user-interests__content {
