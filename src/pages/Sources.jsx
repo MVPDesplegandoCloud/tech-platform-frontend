@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Button from '../components/atoms/Button/Button';
 import Input from '../components/atoms/Input/Input';
 import Label from '../components/atoms/Label/Label';
 import Card from '../components/molecules/Card/Card';
+import AuthenticatedToolbar from '../components/organisms/AuthenticatedToolbar/AuthenticatedToolbar';
 import { createSubscription, getSubscriptions } from '../services/subscriptions';
 import './Sources.css';
 
@@ -58,7 +58,6 @@ const hasSubscriptionForUrl = (items, url) => {
 };
 
 const Sources = () => {
-  const navigate = useNavigate();
   const [subscriptions, setSubscriptions] = useState([]);
   const [isLoadingSubscriptions, setIsLoadingSubscriptions] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -154,11 +153,7 @@ const Sources = () => {
 
   return (
     <main className="sources-page">
-      <header className="sources-toolbar">
-        <button className="sources-toolbar__back" onClick={() => navigate('/dashboard')} type="button">
-          <span aria-hidden="true">←</span> Tech Platform
-        </button>
-      </header>
+      <AuthenticatedToolbar />
 
       <div className="sources-layout">
         <section className="sources-panel sources-list-panel" aria-labelledby="sources-list-title">

@@ -30,8 +30,7 @@ const Dashboard = () => {
       <main className="dashboard-content">
         <div className="welcome-section">
           <h2>¡Bienvenido!</h2>
-          <p>Usuario: <strong>{user?.username || 'usuario'}</strong></p>
-          <p className="user-id">ID de usuario: {user?.userId}</p>
+          <p>Usuario: <strong>{user?.displayName || user?.email || 'usuario'}</strong></p>
         </div>
 
         <div className="features-grid">

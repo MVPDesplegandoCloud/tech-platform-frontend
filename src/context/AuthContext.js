@@ -1,5 +1,36 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { signUp, signIn, signOut, getCurrentUser, confirmSignUp } from 'aws-amplify/auth';
+import {
+  signUp,
+  signIn,
+  signOut,
+  getCurrentUser,
+  fetchUserAttributes,
+  confirmSignUp,
+} from 'aws-amplify/auth';
+
+const getAuthenticatedUser = async () => {
+  const currentUser = await getCurrentUser();
+  let attributes = {};
+
+  try {
+    attributes = await fetchUserAttributes();
+  } catch {
+    // Keep the authenticated session usable if Cognito attributes are unavailable.
+  }
+
+  const nameFromParts = [attributes.given_name, attributes.family_name]
+    .filter(Boolean)
+    .join(' ');
+  const usernameIsId = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(currentUser.username || '');
+  const displayName = attributes.name
+    || nameFromParts
+    || attributes.preferred_username
+    || attributes.email
+    || (!usernameIsId ? currentUser.username : '')
+    || 'usuario';
+
+  return { ...currentUser, ...attributes, displayName };
+};
 
 export const AuthContext = createContext();
 
@@ -13,7 +44,7 @@ export const AuthProvider = ({ children }) => {
     const checkUser = async () => {
       try {
         setIsLoading(true);
-        const currentUser = await getCurrentUser();
+        const currentUser = await getAuthenticatedUser();
         setUser(currentUser);
       } catch (err) {
         setUser(null);
@@ -25,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     checkUser();
   }, []);
 
-  const register = useCallback(async (email, password) => {
+  const register = useCallback(async (email, password, fullName) => {
     try {
       setError(null);
       const result = await signUp({
@@ -34,6 +65,7 @@ export const AuthProvider = ({ children }) => {
         options: {
           userAttributes: {
             email,
+            ...(fullName?.trim() ? { name: fullName.trim() } : {}),
           },
           autoSignIn: false,
         },
@@ -55,7 +87,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (isSignedIn) {
-        const currentUser = await getCurrentUser();
+        const currentUser = await getAuthenticatedUser();
         setUser(currentUser);
         return { isSignedIn, user: currentUser };
       }

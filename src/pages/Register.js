@@ -24,7 +24,7 @@ const Register = () => {
     setIsLoading(true);
 
     try {
-      await register(formData.email, formData.password);
+      await register(formData.email, formData.password, formData.fullName);
       navigate('/confirm-signup', { state: { email: formData.email } });
     } catch (err) {
       let errorMessage = 'Registration failed. Please try again.';
